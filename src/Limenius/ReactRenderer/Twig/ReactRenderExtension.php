@@ -73,6 +73,7 @@ class ReactRenderExtension extends \Twig_Extension
     {
         $props = isset($options['props']) ? $options['props'] : array();
         $propsArray = is_array($props) ? $props : json_decode($props);
+        $tag = isset($options['tag']) ? $options['tag'] : 'div';
 
         $str = '';
         $data = array(
@@ -81,7 +82,6 @@ class ReactRenderExtension extends \Twig_Extension
             'dom_id' => 'sfreact-'.uniqid('reactRenderer', true),
             'trace' => $this->shouldTrace($options),
         );
-
 
         if ($this->shouldRenderClientSide($options)) {
             $str .= $this->renderContext();
@@ -92,7 +92,7 @@ class ReactRenderExtension extends \Twig_Extension
                 json_encode($data['props'])
             );
         }
-        $str .= '<div id="'.$data['dom_id'].'">';
+        $str .= '<'.$tag.' id="'.$data['dom_id'].'">';
 
         if ($this->shouldRenderServerSide($options)) {
             $rendered = $this->renderer->render(
@@ -109,7 +109,7 @@ class ReactRenderExtension extends \Twig_Extension
                 $str .= $evaluated['componentHtml'].$rendered['consoleReplay'];
             }
         }
-        $str .= '</div>';
+        $str .= '</'.$tag.'>';
 
         $evaluated['componentHtml'] = $str;
 
